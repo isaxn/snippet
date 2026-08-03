@@ -3,18 +3,19 @@
   "version": "0.1.0",
   "private": true,
   "engines": {
-  "node": "22.x"
-},
-"scripts": {
-  "dev": "next dev",
-  "build": "next build",
-  "start": "next start -H 0.0.0.0 -p ${PORT:-10000}"
-},
+    "node": "22.x"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start -H 0.0.0.0 -p ${PORT:-10000}"
+  },
   "dependencies": {
     "bcryptjs": "^3.0.2",
     "drizzle-orm": "0.45.2",
     "next": "16.2.6",
     "pg": "^8.16.3",
+    "prism-react-renderer": "^2.4.1",
     "react": "19.2.6",
     "react-dom": "19.2.6"
   },
