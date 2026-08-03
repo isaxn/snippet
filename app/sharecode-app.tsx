@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import CodeBlock from "./code-block";
 
 type User = { name: string; email: string } | null;
 type Snippet = { id: number; slug: string; title: string; description: string; language: string; code: string; authorName: string; createdAt: string; views: number };
@@ -79,7 +80,7 @@ export default function ShareCodeApp({ user }: { user: User }) {
       <div className="filters">{["Semua","JavaScript","TypeScript","Python","PHP","SQL","CSS"].map(item => <button key={item} className={language === item ? "active" : ""} onClick={() => setLanguage(item)}>{item}</button>)}</div>
       <div className="grid">{filtered.map(item => <article className="card" key={item.id} onClick={() => setActive(item)}>
         <div className="cardTop"><span className={`lang ${item.language.toLowerCase()}`}>{item.language}</span><span>•••</span></div>
-        <h3>{item.title}</h3><p>{item.description}</p><pre>{item.code.slice(0, 180)}{item.code.length > 180 ? "…" : ""}</pre>
+        <h3>{item.title}</h3><p>{item.description}</p><CodeBlock code={item.code.slice(0, 180) + (item.code.length > 180 ? "…" : "")} language={item.language} />
         <div className="cardFoot"><span className="avatar">{item.authorName.charAt(0)}</span><span>{item.authorName}</span><span className="grow">◉ {item.views}</span><button onClick={e => {e.stopPropagation(); copy(item.code)}}>Salin raw</button></div>
       </article>)}</div>
     </section>
@@ -90,7 +91,7 @@ export default function ShareCodeApp({ user }: { user: User }) {
     <footer><a className="brand" href="#"><span className="brandMark">&lt;/&gt;</span><span>Share<span>Code</span></span></a><p>Dibuat untuk developer yang suka berbagi.</p><span>© 2026 ShareCode</span></footer>
 
     {uploading && <div className="overlay" onMouseDown={() => setUploading(false)}><form className="modal" onSubmit={submit} onMouseDown={e => e.stopPropagation()}><button type="button" className="close" onClick={() => setUploading(false)}>×</button><span className="kicker">SNIPPET BARU</span><h2>Bagikan kode kamu</h2><label>Judul<input name="title" required maxLength={80} placeholder="Contoh: Express API Starter"/></label><label>Deskripsi<input name="description" maxLength={180} placeholder="Jelaskan kegunaan snippet..."/></label><label>Bahasa<select name="language" defaultValue="JavaScript">{["JavaScript","TypeScript","Python","PHP","SQL","CSS","HTML","Lainnya"].map(x => <option key={x}>{x}</option>)}</select></label><label>Kode<textarea name="code" required rows={12} spellCheck={false} placeholder="Tempel kode di sini..."/></label><button className="primary large" type="submit">Publikasikan snippet →</button></form></div>}
-    {active && <div className="overlay" onMouseDown={() => setActive(null)}><div className="modal detail" onMouseDown={e => e.stopPropagation()}><button className="close" onClick={() => setActive(null)}>×</button><span className={`lang ${active.language.toLowerCase()}`}>{active.language}</span><h2>{active.title}</h2><p>{active.description}</p><pre>{active.code}</pre><div className="detailActions"><button className="primary" onClick={() => copy(active.code)}>Salin raw</button><a className="ghost" href={`/raw/${active.slug}`} target="_blank">Buka raw ↗</a></div></div></div>}
+    {active && <div className="overlay" onMouseDown={() => setActive(null)}><div className="modal detail" onMouseDown={e => e.stopPropagation()}><button className="close" onClick={() => setActive(null)}>×</button><span className={`lang ${active.language.toLowerCase()}`}>{active.language}</span><h2>{active.title}</h2><p>{active.description}</p><CodeBlock code={active.code} language={active.language} /><div className="detailActions"><button className="primary" onClick={() => copy(active.code)}>Salin raw</button><a className="ghost" href={`/raw/${active.slug}`} target="_blank">Buka raw ↗</a></div></div></div>}
     {toast && <div className="toast">✓ {toast}</div>}
   </main>;
 }
